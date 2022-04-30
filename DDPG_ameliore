@@ -45,13 +45,9 @@ def show_video(directory):
 import numpy as np
 import torch
 import torch.nn as nn
-#from torch.autograd import Variable
 import torch.nn.functional as F
-
 import gym
-#import argparse
 import os
-
 import time
 from collections import deque
 
