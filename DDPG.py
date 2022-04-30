@@ -227,7 +227,7 @@ state_dim = env.observation_space.shape[0]
 action_dim = env.action_space.shape[0] 
 action_maxi = float(env.action_space.high[0])
 
-agent = DDPGplus(state_dim, action_dim, action_maxi)
+agent = DDPG(state_dim, action_dim, action_maxi)
 
 ### DDPG train + video
 def DDPG_train(n_episodes=1000):
@@ -290,7 +290,7 @@ def DDPG_train(n_episodes=1000):
         if timestep_after_last_save >= 10:
 
             timestep_after_last_save %= 10            
-            save(agent, 'test_1', 'DDPGplus')  
+            save(agent, 'test_1', 'DDPG')  
     
     ### Dernier épisode pour vidéo
 
@@ -338,13 +338,13 @@ def DDPG_train(n_episodes=1000):
     if timestep_after_last_save >= 10:
 
         timestep_after_last_save %= 10            
-        save(agent, 'test_1', 'DDPGplus')  
+        save(agent, 'test_1', 'DDPG')  
     monitor_env.close()
     show_video("./gym-results")
 
     return scores_list, avg_scores_list
 
-scores, avg_scores = DDPGplus_train()
+scores, avg_scores = DDPG_train()
 
 import pandas as pd
 
