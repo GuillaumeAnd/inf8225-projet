@@ -351,8 +351,8 @@ import pandas as pd
 
 res = pd.read_csv('DDPG_res.txt', delimiter = ",", header=None)
 res.head()
-score = res[3].apply(lambda x : float(x.split(":")[1]))
-avg_score = res[4].apply(lambda x : float(x.split(":")[1]))
+score = res[1].apply(lambda x : float(x.split(":")[1]))
+avg_score = res[2].apply(lambda x : float(x.split(":")[1]))
 Ep = res[0].apply(lambda x : x.split(".")[1])
 
 plt.plot(range(len(score)),score,range(len(score)),avg_score)
