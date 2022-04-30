@@ -358,3 +358,15 @@ def DDPGplus_train(n_episodes=5):
     return scores_list, avg_scores_list
 
 scores, avg_scores = DDPGplus_train()
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+
+res = pd.read_csv('DDPGplus_res.txt', delimiter = ",", header=None)
+res.head()
+score = res[3].apply(lambda x : float(x.split(":")[1]))
+avg_score = res[4].apply(lambda x : float(x.split(":")[1]))
+Ep = res[0].apply(lambda x : x.split(".")[1])
+
+plt.plot(range(len(score)),score,range(len(score)),avg_score)
