@@ -1,8 +1,47 @@
+# Import
+!apt-get install x11-utils > /dev/null 2>&1 
+!pip install pyglet > /dev/null 2>&1 
+!apt-get install -y xvfb python-opengl > /dev/null 2>&1
+
+!pip install gym pyvirtualdisplay > /dev/null 2>&1
+
+!pip install gym[box2d]
+!pip install pyvirtualdisplay
+!pip install PyOpenGL
+!pip install PyOpenGL-accelerate
+
+import gym
 import numpy as np
+import matplotlib.pyplot as plt
+from IPython import display as ipythondisplay
+
+from pyvirtualdisplay import Display
+display = Display(visible=0, size=(400, 300))
+display.start()
+
+# Import
 import torch
+import numpy as np
+import random, math
+
+import gym
+from gym.wrappers import Monitor
+
+import base64
+from pathlib import Path
+from gym.wrappers import Monitor
+def show_video(directory):
+    html = []
+    for mp4 in Path(directory).glob("*.mp4"):
+        video_b64 = base64.b64encode(mp4.read_bytes())
+        html.append('''<video alt="{}" autoplay 
+                      loop controls style="height: 400px;">
+                      <source src="data:video/mp4;base64,{}" type="video/mp4" />
+                 </video>'''.format(mp4, video_b64.decode('ascii')))
+    ipythondisplay.display(ipythondisplay.HTML(data="<br>".join(html)))
+    
 import torch.nn as nn
 import torch.nn.functional as F
-import gym
 import os
 import time
 from collections import deque
@@ -308,7 +347,6 @@ def DDPG_train(n_episodes=5):
 scores, avg_scores = DDPGplus_train()
 
 import pandas as pd
-import matplotlib.pyplot as plt
 
 
 res = pd.read_csv('DDPG_res.txt', delimiter = ",", header=None)
