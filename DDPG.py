@@ -230,7 +230,7 @@ action_maxi = float(env.action_space.high[0])
 agent = DDPGplus(state_dim, action_dim, action_maxi)
 
 ### DDPG train + video
-def DDPG_train(n_episodes=5):
+def DDPG_train(n_episodes=1000):
 
     scores_deque = deque(maxlen=100)
     scores_list = []
