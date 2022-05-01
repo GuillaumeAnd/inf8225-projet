@@ -20,11 +20,8 @@ display = Display(visible=0, size=(400, 300))
 display.start()
 
 # Import
-import torch
-import numpy as np
 import random, math
 
-import gym
 from gym.wrappers import Monitor
 
 import base64
@@ -42,19 +39,12 @@ def show_video(directory):
     
 ### DDPG ameliore : ###
 
-import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import gym
 import os
 import time
 from collections import deque
-
-import numpy as np
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
 
 class Actor(nn.Module):
     def __init__(self, state_dim, action_dim, action_maxi):
@@ -228,7 +218,7 @@ start_timestep=1e4
 std_noise=0.1
 
 env = gym.make('BipedalWalker-v3')
-
+monitor_env = Monitor(env, "./gym-results", force=True, video_callable=lambda episode: True)
 # Set seeds
 seed = 2164904
 env.seed(seed)
@@ -309,52 +299,31 @@ def DDPGplus_train(n_episodes=5):
 
     i_episode = n_episodes +1
 
-    monitor_env = Monitor(env, "./gym-results", force=True, video_callable=lambda episode: True)
-    timestep = 0
-    total_reward = 0
-        
+         
     state = monitor_env.reset()
-    done = False
-    while not done:
-      if total_timesteps < start_timestep:  #1e4
-        action = monitor_env.action_space.sample()
-      else:
-        action = agent.choose_action(np.array(state))
-        shift_action = np.random.normal(0, std_noise, size=action_dim)
-        action = (action + shift_action).clip(low, high)
-            
-        new_state, reward, done, _ = monitor_env.step(action) 
-        done_bool = 0 if timestep + 1 == monitor_env._max_episode_steps else float(done)
-        total_reward += reward                       
+    for k in range(300):
+      action = agent.choose_action(np.array(state))
+      action = (action).clip(low, high)
+      new_state, reward, done, _ = monitor_env.step(action) 
+      total_reward += reward                       
 
         # Store every timestep in replay buffer
-        replay_buf.add((state, new_state, action, reward, done_bool))
-        state = new_state
+      replay_buf.add((state, new_state, action, reward, float(done)))
+      state = new_state
 
-        timestep += 1     
-        total_timesteps += 1
-        timestep_after_last_save += 1
+      timestep += 1     
+      total_timesteps += 1
+      timestep_after_last_save += 1
 
     scores_deque.append(total_reward)
     scores_list.append(total_reward)
 
     avg_score = np.mean(scores_deque)
     avg_scores_list.append(avg_score)
-        
-        # train_by_episode(time_start, i_episode) 
-        
-    print('Ep. {}, Score: {:.2f}, Avg.Score: {:.2f}'.format(i_episode, total_reward, avg_score))     
 
-    agent.train(replay_buf, timestep)
-
-        # save tous les 10 ep
-    if timestep_after_last_save >= 10:
-
-        timestep_after_last_save %= 10            
-        save(agent, 'test_1', 'DDPGplus')  
     monitor_env.close()
     show_video("./gym-results")
-
+    
     return scores_list, avg_scores_list
 
 scores, avg_scores = DDPGplus_train()
