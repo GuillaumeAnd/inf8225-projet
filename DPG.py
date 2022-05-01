@@ -299,7 +299,7 @@ def  DPG_train(n_episodes=2000):
 
          
     state = monitor_env.reset()
-    for k in range(100):
+    for k in range(300):
       action = agent.choose_action(np.array(state))
       action = (action).clip(low, high)
       new_state, reward, done, _ = monitor_env.step(action) 
